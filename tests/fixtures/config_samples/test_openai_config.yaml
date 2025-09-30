@@ -1,0 +1,29 @@
+providers:
+  openai:
+    api_key_env: "OPENAI_API_KEY"
+    default_model: "gpt-4o-mini"
+    available_models: ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
+    pricing_usd_per_1m_tokens:
+      gpt-3.5-turbo: [0.5, 1.5]
+      gpt-4o: [5.0, 15.0]
+      gpt-4o-mini: [0.15, 0.6]
+    model_capabilities:
+      gpt-4o-mini:
+        supported_parameters: ["temperature", "top_p", "max_tokens", "frequency_penalty"]
+        parameters:
+          temperature:
+            type: "float"
+            range: [0.0, 2.0]
+            default: 0.7
+          top_p:
+            type: "float"
+            range: [0.0, 1.0]
+            default: 1.0
+          max_tokens:
+            type: "int"
+            range: [50, 4000]
+            default: 1000
+          frequency_penalty:
+            type: "float"
+            range: [0.0, 2.0]
+            default: 0.0

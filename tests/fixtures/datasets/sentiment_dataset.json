@@ -1,0 +1,37 @@
+[
+  {
+    "input": "I absolutely love this product! It exceeded my expectations.",
+    "target": {
+      "sentiment": "positive",
+      "confidence": 0.95
+    }
+  },
+  {
+    "input": "This is the worst thing I've ever bought. Complete waste of money.",
+    "target": {
+      "sentiment": "negative",
+      "confidence": 0.9
+    }
+  },
+  {
+    "input": "It's okay, nothing special but does the job.",
+    "target": {
+      "sentiment": "neutral",
+      "confidence": 0.6
+    }
+  },
+  {
+    "input": "Amazing quality and fast shipping! Highly recommend.",
+    "target": {
+      "sentiment": "positive",
+      "confidence": 0.9
+    }
+  },
+  {
+    "input": "Terrible customer service, product broke after one week.",
+    "target": {
+      "sentiment": "negative",
+      "confidence": 0.85
+    }
+  }
+]

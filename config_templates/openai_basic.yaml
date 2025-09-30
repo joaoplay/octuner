@@ -1,0 +1,141 @@
+# Enhanced OpenAI Configuration Template
+# Copy this file and customize for your use case
+#
+# Usage: MultiProviderTunableLLM(config_file="my_config.yaml")
+#
+# This template includes comprehensive parameter optimization options
+# for OpenAI models including advanced parameters like stop sequences,
+# multiple completions, and reproducible outputs.
+
+providers:
+  openai:
+    default_model: "o4-mini"
+    
+    # Available models for optimization
+    available_models:
+      - gpt-4o-mini
+      - gpt-4o
+      - gpt-4-turbo
+      - gpt-3.5-turbo
+      - o4-mini
+    
+    # Pricing (USD per 1M tokens: [input, output])
+    pricing_usd_per_1m_tokens:
+      gpt-4o-mini: [0.15, 0.60]
+      gpt-4o: [2.50, 10.00]
+      gpt-4-turbo: [10.00, 30.00]
+      gpt-3.5-turbo: [0.50, 1.50]
+      o4-mini: [2.50, 10.00]
+    
+    # Model capabilities - explicitly define what parameters to optimize
+    model_capabilities:
+      gpt-4o-mini:
+        # Parameters that will be optimized during tuning
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        
+        # Parameter definitions with type and range
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: [ 'low', 'medium', 'high' ]
+            default: 'low'
+        
+        # Forced parameters (never optimized, always use these values)
+        forced_parameters: {}
+      
+      gpt-4o:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: [ 'low', 'medium', 'high' ]
+            default: 'low'
+        forced_parameters: {}
+      
+      gpt-3.5-turbo:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: [ 'low', 'medium', 'high' ]
+            default: 'low'
+        forced_parameters: {}
+      
+      gpt-4-turbo:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'low'
+        forced_parameters: {}
+
+      o4-mini:
+        # Parameters that will be optimized during tuning
+        supported_parameters: [ max_output_tokens, use_websearch, search_context_size ]
+
+        # Parameter definitions with type and range
+        parameters:
+          max_output_tokens:
+            type: int
+            range: [ 50, 4000 ]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [ true, false ]
+            default: false
+          search_context_size:
+            type: choice
+            range: [ 'low', 'medium', 'high' ]
+            default: 'low'
+
+        # Forced parameters (never optimized, always use these values)
+        forced_parameters: { }

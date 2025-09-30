@@ -1,0 +1,22 @@
+meta:
+  latency.ttl_ms_p95: 0.0
+  quality.overall: 0.19
+params:
+  classifier_llm.frequency_penalty: -0.5661370858229096
+  classifier_llm.max_tokens: 783
+  classifier_llm.model: gpt-4o
+  classifier_llm.presence_penalty: -1.5365237618994811
+  classifier_llm.temperature: 1.4580143360819746
+  classifier_llm.top_p: 0.16664018656068133
+  confidence_llm.frequency_penalty: 0.9184247133522563
+  confidence_llm.max_tokens: 345
+  confidence_llm.model: gpt-4o-mini
+  confidence_llm.presence_penalty: 0.5502298854208525
+  confidence_llm.temperature: 0.12711670057204727
+  confidence_llm.top_p: 0.392664918982407233
+  reasoning_llm.frequency_penalty: 1.083868719818244
+  reasoning_llm.max_tokens: 773
+  reasoning_llm.model: gpt-4o-mini
+  reasoning_llm.presence_penalty: -0.024817614542437028
+  reasoning_llm.temperature: 1.42648957444599
+  reasoning_llm.top_p: 0.6051494778125466

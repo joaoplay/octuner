@@ -1,0 +1,21 @@
+metadata:
+  latency.ttl_ms_p95: 189747.0
+  quality.overall: 0.0
+  timestamp: 1759238589.514389
+metrics_summary: null
+parameters:
+  classifier_llm.max_output_tokens: 2942
+  classifier_llm.provider_model: gemini:gemini-2.5-flash
+  classifier_llm.search_context_size: 1
+  classifier_llm.temperature: 1.7323522915498704
+  classifier_llm.use_websearch: true
+  confidence_llm.max_output_tokens: 131
+  confidence_llm.provider_model: gemini:gemini-2.5-flash
+  confidence_llm.search_context_size: 1
+  confidence_llm.temperature: 0.36680901970686763
+  confidence_llm.use_websearch: true
+  reasoning_llm.max_output_tokens: 1756
+  reasoning_llm.provider_model: gemini:gemini-2.5-flash
+  reasoning_llm.search_context_size: 20
+  reasoning_llm.temperature: 0.7327236865873834
+  reasoning_llm.use_websearch: false

@@ -1,0 +1,191 @@
+# Multi-Provider Configuration Template
+# Copy this file and customize for your use case
+#
+# Usage: MultiProviderTunableLLM(config_file="my_config.yaml")
+#
+# This template includes both OpenAI and Gemini providers with web search support
+# for comprehensive multi-provider optimization.
+
+providers:
+  openai:
+    default_model: "gpt-4o-mini"
+    
+    # Available models for optimization
+    available_models:
+      - gpt-4o-mini
+      - gpt-4o
+      - gpt-4-turbo
+      - gpt-3.5-turbo
+    
+    # Pricing (USD per 1M tokens: [input, output])
+    pricing_usd_per_1m_tokens:
+      gpt-4o-mini: [0.15, 0.60]
+      gpt-4o: [2.50, 10.00]
+      gpt-4-turbo: [10.00, 30.00]
+      gpt-3.5-turbo: [0.50, 1.50]
+    
+    # Model capabilities - explicitly define what parameters to optimize
+    model_capabilities:
+      gpt-4o-mini:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'low'
+        forced_parameters: {}
+      
+      gpt-4o:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'low'
+        forced_parameters: {}
+      
+      gpt-3.5-turbo:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'low'
+        forced_parameters: {}
+      
+      gpt-4-turbo:
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'low'
+        forced_parameters: {}
+
+  gemini:
+    default_model: "gemini-1.5-flash"
+    
+    # Available models for optimization
+    available_models:
+      - gemini-1.5-flash
+      - gemini-1.5-pro
+      - gemini-1.0-pro
+    
+    # Pricing (USD per 1M tokens: [input, output])
+    pricing_usd_per_1m_tokens:
+      gemini-1.5-flash: [0.075, 0.30]
+      gemini-1.5-pro: [1.25, 5.00]
+      gemini-1.0-pro: [0.50, 1.50]
+    
+    # Model capabilities - explicitly define what parameters to optimize
+    model_capabilities:
+      gemini-1.5-flash:
+        supported_parameters: [temperature, max_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'medium'
+        forced_parameters: {}
+      
+      gemini-1.5-pro:
+        supported_parameters: [temperature, max_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'medium'
+        forced_parameters: {}
+      
+      gemini-1.0-pro:
+        supported_parameters: [temperature, max_tokens, use_websearch, search_context_size]
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'medium'
+        forced_parameters: {}

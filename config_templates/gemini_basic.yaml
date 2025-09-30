@@ -1,0 +1,75 @@
+# Enhanced Gemini Configuration Template
+# Copy this file and customize for your use case
+#
+# Usage: MultiProviderTunableLLM(config_file="my_config.yaml")
+#
+# This template includes comprehensive parameter optimization options
+# for Google Gemini models including web search capabilities.
+
+providers:
+  gemini:
+    default_model: "gemini-2.5-flash"
+    
+    # Available models for optimization
+    available_models:
+      - gemini-2.0-flash
+      - gemini-2.5-flash
+    
+    # Pricing (USD per 1M tokens: [input, output])
+    pricing_usd_per_1m_tokens:
+      gemini-2.0-flash: [0.075, 0.30]
+      gemini-2.5-flash: [ 1.25, 5.00]
+    
+    # Model capabilities - explicitly define what parameters to optimize
+    model_capabilities:
+      gemini-2.0-flash:
+        # Parameters that will be optimized during tuning
+        supported_parameters: [temperature, max_output_tokens, use_websearch, search_context_size]
+        
+        # Parameter definitions with type and range
+        parameters:
+          temperature:
+            type: float
+            range: [0.0, 2.0]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [50, 4000]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [true, false]
+            default: false
+          search_context_size:
+            type: choice
+            range: ['low', 'medium', 'high']
+            default: 'medium'
+        
+        # Forced parameters (never optimized, always use these values)
+        forced_parameters: {}
+
+      gemini-2.5-flash:
+        # Parameters that will be optimized during tuning
+        supported_parameters: [ temperature, max_output_tokens, use_websearch, search_context_size ]
+
+        # Parameter definitions with type and range
+        parameters:
+          temperature:
+            type: float
+            range: [ 0.0, 2.0 ]
+            default: 0.7
+          max_output_tokens:
+            type: int
+            range: [ 50, 4000 ]
+            default: 1000
+          use_websearch:
+            type: bool
+            range: [ true, false ]
+            default: false
+          search_context_size:
+            type: choice
+            range: [ 'low', 'medium', 'high' ]
+            default: 'medium'
+
+        # Forced parameters (never optimized, always use these values)
+        forced_parameters: { }
