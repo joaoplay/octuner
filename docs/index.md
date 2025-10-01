@@ -12,7 +12,7 @@ Octuner is a lightweight library that solves the decision-making process when in
 
 Building LLM applications often feels like solving a puzzle:
 
-- **Which provider?** OpenAI, Gemini, Anthropic…?  
+- **Which provider?** OpenAI, Gemini, Anthropic… or self-hosted (Ollama, vLLM, etc.)?  
 - **Which model?** GPT-4o, Gemini Pro, Claude…?  
 - **Which parameters?** Temperature, top-p, max_tokens…?  
 - **How to balance quality, cost, and latency?**
@@ -181,13 +181,13 @@ print(chain.predict("The new UI is a joy to use."))
 ### **Multi-Provider Optimization**
 Automatically discover the best combination of:
 
-- **Providers**: OpenAI, Gemini, and etc.
-- **Models**: GPT-4o, GPT-4o-mini, Gemini Pro, etc.
+- **Providers**: OpenAI, Gemini, Anthropic, or self-hosted (Ollama, vLLM, etc.)
+- **Models**: GPT-4o, Gemini Pro, Claude, or self-hosted (Llama, Mistral, etc.)
 - **Parameters**: temperature, top_p, max_tokens, web search
 - **Capabilities**: Web search, etc.
 
 ### **Multiple Optimization Modes**
-- **Pareto**: Balance quality, cost, and response time (default)
+- **Pareto**: Balance quality, cost, and latency (default)
 - **Constrained**: Maximize quality within cost/latency limits
 - **Scalarized**: Optimize weighted combination of metrics
 - **Quality-focused**: Maximize performance regardless of cost/time
@@ -217,11 +217,9 @@ providers:
 ## Learn More
 
 1. **[Installation & Setup](installation.md)** - Get started quickly
-2. **[Getting Started](getting-started.md)** - Basic workflow and concepts  
-3. **[Usage Guide](usage/quickstart.md)** - Practical examples and patterns
-4. **[Provider Configuration](usage/providers.md)** - Multi-provider setup
-5. **[Advanced Optimization](usage/optimizer.md)** - Complex tuning scenarios
-6. **[API Reference](reference.md)** - Complete API documentation
+2. **[Getting Started](getting-started.md)** - Complete workflow, examples, and custom provider setup  
+3. **[API Reference](reference.md)** - Complete API documentation
+4. **[Contributing](contributing.md)** - How to contribute to Octuner
 
 ---
 

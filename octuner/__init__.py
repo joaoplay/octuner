@@ -15,7 +15,14 @@ from .optimization.auto import AutoTuner
 from .utils.exporter import apply_best
 from .tunable.types import SearchResult, ParamType
 from .tunable.tunable_llm import MultiProviderTunableLLM
-from .providers import get_provider, get_all_models, PROVIDERS
+from .providers import (
+    get_provider, 
+    get_all_models, 
+    register_provider,
+    unregister_provider,
+    list_providers,
+    PROVIDERS
+)
 
 __version__ = "0.1.0"
 
@@ -33,7 +40,11 @@ __all__ = [
     "SearchResult", 
     "ParamType",
     "MultiProviderTunableLLM",
+    # Provider functions
     "get_provider",
     "get_all_models",
+    "register_provider",
+    "unregister_provider",
+    "list_providers",
     "PROVIDERS",
 ]

@@ -120,7 +120,7 @@ Automatically discover the best combination of:
 - **Capabilities**: Web search, function calling, etc.
 
 ### **Multiple Optimization Modes**
-- **Pareto**: Balance quality, cost, and response time (default)
+- **Pareto**: Balance quality, cost, and latency (default)
 - **Constrained**: Maximize quality within cost/latency limits
 - **Scalarized**: Optimize weighted combination of metrics
 - **Quality-focused**: Maximize performance regardless of cost/time
@@ -198,4 +198,4 @@ Contributions welcome! Please check the issues and pull requests for current dis
 
 ---
 
-*Octuner helps developers build better LLM applications by systematically optimizing the quality vs cost vs time triangle through explicit configuration management and data-driven parameter tuning.*
+*Octuner helps developers build better LLM applications by systematically optimizing the quality vs cost vs latency triangle through explicit configuration management and data-driven parameter tuning.*

@@ -55,8 +55,8 @@ print("Config loaded OK")
 
 ## Next steps
 
-- Read the short [Getting Started](getting-started.md)
-- See provider options in [Providers](usage/providers.md)
-- Optimize your component with [AutoTuner](usage/optimizer.md)
+- Read the short [Getting Started](getting-started.md) guide
+- Explore the [API Reference](reference.md) for detailed documentation
+- Learn how to [contribute](contributing.md) to Octuner
 
 Note: Always pass your YAML `config_file` explicitly when constructing `MultiProviderTunableLLM`.

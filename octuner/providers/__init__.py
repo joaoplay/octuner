@@ -8,7 +8,14 @@ and the base provider interface.
 from .base import BaseLLMProvider, LLMResponse
 from .openai import OpenAIProvider
 from .gemini import GeminiProvider
-from .registry import get_provider, get_all_models, PROVIDERS
+from .registry import (
+    get_provider, 
+    get_all_models,
+    register_provider,
+    unregister_provider,
+    list_providers,
+    PROVIDERS,
+)
 
 __all__ = [
     "BaseLLMProvider",
@@ -17,5 +24,8 @@ __all__ = [
     "GeminiProvider",
     "get_provider",
     "get_all_models",
+    "register_provider",
+    "unregister_provider",
+    "list_providers",
     "PROVIDERS",
 ]
