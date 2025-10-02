@@ -187,7 +187,7 @@ class TestAutoTuner:
             entrypoint=sample_entrypoint_function
         )
         
-        result = tuner.optimize()
+        result = tuner.search()
         
         assert isinstance(result, SearchResult)
         assert result.best_trial == best_trial
@@ -243,7 +243,7 @@ class TestAutoTuner:
             constraints=constraints
         )
         
-        result = tuner.optimize()
+        result = tuner.search(mode="constrained", constraints=constraints)
         
         assert isinstance(result, SearchResult)
         assert result.optimization_mode == "constrained"
@@ -299,7 +299,7 @@ class TestAutoTuner:
             scalarization_weights=weights
         )
         
-        result = tuner.optimize()
+        result = tuner.search(mode="scalarized", scalarization_weights=weights)
         
         assert isinstance(result, SearchResult)
         assert result.optimization_mode == "scalarized"
@@ -360,7 +360,7 @@ class TestAutoTuner:
             entrypoint=sample_entrypoint_function
         )
         
-        result = tuner.optimize()
+        result = tuner.search()
         
         assert isinstance(result, SearchResult)
         assert len(result.all_trials) == 2
@@ -479,7 +479,7 @@ class TestAutoTuner:
             n_trials=5
         )
         
-        result = tuner.optimize()
+        result = tuner.search()
         
         assert len(result.all_trials) == 5
         assert result.total_trials == 5

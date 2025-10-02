@@ -2,7 +2,7 @@
   <img src="docs/assets/octuner_logo.png" alt="Octuner Logo" width="400">
 </div>
 
-# Octuner - A Multi-Provider LLM Optimizer
+# Octuner - Multi-Provider LLM Optimizer
 
 **Optimize LLM providers, models, and parameters — without the guesswork.**
 
@@ -12,7 +12,7 @@ Octuner is a lightweight library that solves the decision-making process when in
 
 Building LLM applications often feels like solving a puzzle:
 
-- **Which provider?** OpenAI, Gemini, Anthropic…?  
+- **Which provider?** OpenAI, Gemini, Anthropic… or self-hosted (Ollama, vLLM, etc.)?  
 - **Which model?** GPT-4o, Gemini Pro, Claude…?  
 - **Which parameters?** Temperature, top-p, max_tokens…?  
 - **How to balance quality, cost, and latency?**

@@ -1,10 +1,3 @@
-"""
-Configuration file loader for Octuner.
-
-This module provides utilities to load YAML configuration files explicitly
-provided by engineers using the library.
-"""
-
 import yaml
 import logging
 from pathlib import Path
@@ -15,7 +8,13 @@ logger = logging.getLogger(__name__)
 
 class ConfigLoader:
     """
-    Loads and validates YAML configuration files.
+    This class provides utilities to load YAML configuration files as described in config_templates/*.yaml.
+
+    It allows to get available providers, models, parameters, pricing, and capabilities. Those capabilities
+    become available to the tuning algorithms to know what parameters can be optimized, their ranges,
+    types, and default values.
+
+    IMPORTANT: Note that when instantiating this class, the configuration file is loaded immediately.
     """
     
     def __init__(self, config_file: str):
@@ -121,17 +120,17 @@ class ConfigLoader:
         supported_params = self.get_supported_parameters(provider_name, model)
         return parameter in supported_params
     
-    def get_parameter_range(self, provider_name: str, model: str, parameter: str) -> tuple[Any]:
+    def get_parameter_range(self, provider_name: str, model: str, parameter: str):
         """
         Get optimization range for a parameter.
         """
         # Handle special case for 'use_websearch' parameter - boolean choices
         if parameter == 'use_websearch':
-            return (True, False)
+            return True, False
         
         # Handle special case for 'search_context_size' parameter - integer range
         if parameter == 'search_context_size':
-            return (1, 20)  # Reasonable range for search context size
+            return 1, 20  # Reasonable range for search context size
         
         capabilities = self.get_model_capabilities(provider_name, model)
         parameters = capabilities.get('parameters', {})
@@ -154,7 +153,7 @@ class ConfigLoader:
         
         return tuple(param_config['range'])
     
-    def get_parameter_default(self, provider_name: str, model: str, parameter: str) -> Any:
+    def get_parameter_default(self, provider_name: str, model: str, parameter: str):
         """
         Get default value for a parameter.
         

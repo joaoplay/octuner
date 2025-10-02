@@ -6,11 +6,8 @@ from configuration loading through optimization to result export.
 """
 
 import pytest
-import tempfile
 import yaml
-import json
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 from octuner import (
     MultiProviderTunableLLM, AutoTuner, apply_best,
@@ -241,7 +238,7 @@ class TestEndToEndWorkflow:
         )
         
         # Run optimization
-        result = auto_tuner.optimize()
+        result = auto_tuner.search()
         
         # Verify results
         assert isinstance(result, SearchResult)

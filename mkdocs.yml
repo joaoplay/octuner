@@ -1,5 +1,5 @@
 site_name: Octuner
-site_description: "A Multi-Provider LLM Optimizer"
+site_description: "Multi-Provider LLM Optimizer"
 site_url: https://github.com/joaoplay/octuner
 repo_url: https://github.com/joaoplay/octuner
 repo_name: joaoplay/octuner
@@ -128,7 +128,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername/octuner
+      link: https://github.com/joaoplay/octuner
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/octuner/
   analytics:

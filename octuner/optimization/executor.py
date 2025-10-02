@@ -1,9 +1,3 @@
-"""
-Execution engine for Octuner.
-
-Runs the entrypoint function over the dataset and collects metrics.
-"""
-
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -17,20 +11,64 @@ logger = logging.getLogger(__name__)
 
 class DatasetExecutor:
     """
-    Executes the entrypoint function over a dataset and collects metrics.
+    DatasetExecutor is a core component of the optimization system that
+    handles the execution of evaluation trials during parameter optimization.
+    It manages the evaluation of components over datasets, collects performance
+    metrics, and provides both sequential and parallel execution capabilities.
+
+    How it works:
+
+    1. **Parameter Application**: Applies trial parameters to the component using
+       the parameter setter utilities, ensuring consistent parameter configuration
+       across trials.
+
+    2. **Dataset Evaluation**: Executes the entrypoint function over each dataset
+       item, collecting outputs and computing quality scores using the provided
+       metric function.
+
+    3. **Metrics Collection**: Automatically collects comprehensive metrics including
+       quality scores, execution costs, and latency measurements for each trial.
+
+    4. **Parallel Execution**: Supports concurrent evaluation of dataset items
+       using ThreadPoolExecutor for faster trial execution when max_workers > 1.
+
+    5. **Statistical Aggregation**: Provides robust statistical aggregation across
+       replicates and dataset items using median-based aggregation for stability.
+
+    Key Features:
+
+    - **Parallel Execution**: Multi-threaded evaluation for faster optimization
+    - **Comprehensive Metrics**: Quality, cost, and latency tracking
+    - **Statistical Robustness**: Median-based aggregation to handle outliers
+    - **Error Handling**: Graceful handling of individual item failures
+    - **Replicate Support**: Multiple trial runs for statistical significance
+    - **Cost Tracking**: Automatic cost collection from tunable components
     """
     
     def __init__(self, component: Any, entrypoint: EntrypointFunction, dataset: Dataset, metric: MetricFunction,
                  max_workers: int = 1):
         """
-        Initialize the executor.
-        
+        Constructor
+
         Args:
-            component: Component to tune
-            entrypoint: Function to call with (component, input)
-            dataset: Dataset of input/target pairs
-            metric: Function to compute quality score
-            max_workers: Maximum number of concurrent workers
+            component: The component to evaluate. Must be tunable and support parameter
+                        setting via the parameter setter utilities.
+            entrypoint: Function that evaluates the component with input data.
+                       Called as `entrypoint(component, input_data)` for each
+                       dataset item. Should return a dictionary or object that
+                       can be processed by the metric function.
+            dataset: List of input/target pairs for evaluation. Each item should
+                    be a dictionary with 'input' and 'target' keys containing
+                    the input data and expected output respectively.
+            metric: Function that computes quality scores from evaluation results.
+                   Called as `metric(output, target)` where output is the result
+                   from entrypoint and target is the expected output. Should
+                   return a float score (higher is better).
+            max_workers: Maximum number of concurrent workers for parallel
+                        evaluation. Use 1 for sequential execution, >1 for
+                        parallel execution. Higher values speed up I/O-bound
+                        tasks but may not help with CPU-bound tasks due to
+                        Python's GIL.
         """
         self.component = component
         self.entrypoint = entrypoint
@@ -38,15 +76,47 @@ class DatasetExecutor:
         self.metric = metric
         self.max_workers = max_workers
     
-    def execute_trial(self, parameters: Dict[str, Any]) -> MetricResult:
+    @staticmethod
+    def _calculate_median(values: List[float], default: float = 0.0) -> float:
         """
-        Execute a single trial with given parameters.
+        Calculate the median value from a list of numbers.
         
         Args:
-            parameters: Parameter values to set
+            values: List of numeric values
+            default: Default value to return if the list is empty
             
         Returns:
-            Aggregated metrics for the trial
+            Median value or default if list is empty
+        """
+        if not values:
+            return default
+        sorted_values = sorted(values)
+        return sorted_values[len(sorted_values) // 2]
+    
+    def execute_trial(self, parameters: Dict[str, Any]) -> MetricResult:
+        """
+        Execute a single evaluation trial with the given parameters. t applies the trial
+        parameters to the component, executes the evaluation over all dataset items, and
+        returns aggregated metrics including quality, cost, and latency.
+
+        The execution process:
+
+        1. **Parameter Application**: Sets the trial parameters on the component
+        2. **Call Log Clearing**: Clears any previous call logs for clean metrics
+        3. **Dataset Evaluation**: Runs the entrypoint function over each dataset item
+        4. **Metrics Collection**: Collects quality scores, costs, and timing data
+        5. **Statistical Aggregation**: Computes median quality and total cost
+
+        Args:
+            parameters: Dictionary of parameter values to set on the component.
+                      Keys should match the parameter paths from the search space.
+                      Example: {"llm.temperature": 0.7, "llm.max_tokens": 100}
+
+        Returns:
+            MetricResult containing:
+            - quality: Median quality score across all dataset items
+            - cost: Total cost from all component calls (if available)
+            - latency_ms: Total execution time in milliseconds
         """
         # Set parameters on the component
         from ..utils.setter import set_parameters
@@ -82,11 +152,7 @@ class DatasetExecutor:
                 aggregated = get_aggregated_metrics(self.component)
                 
                 # Calculate quality (median of scores)
-                if quality_scores:
-                    quality_scores.sort()
-                    median_quality = quality_scores[len(quality_scores) // 2]
-                else:
-                    median_quality = 0.0
+                median_quality = self._calculate_median(quality_scores)
                 
                 # Build result
                 result = MetricResult(
@@ -107,10 +173,14 @@ class DatasetExecutor:
     
     def _execute_parallel(self) -> List[float]:
         """
-        Execute the dataset in parallel.
-        
+        This method implements parallel execution of dataset items using Python
+        ThreadPoolExecutor. It's particularly effective for I/O-bound tasks like
+        API calls, file operations, or network requests where the GIL doesn't
+        significantly impact performance.
+
         Returns:
-            List of quality scores
+            List of quality scores from all dataset items, in completion order.
+            Failed items contribute a score of 0.0.
         """
         quality_scores = []
         
@@ -139,14 +209,19 @@ class DatasetExecutor:
     
     def execute_with_replicates(self, parameters: Dict[str, Any], replicates: int = 1) -> MetricResult:
         """
-        Execute a trial multiple times and aggregate results.
-        
+        Execute a trial multiple times and aggregate results for statistical robustness.
+        It's particularly useful for optimization scenarios where individual trials may
+        have high variance due to non-deterministic components or external factors.
+
         Args:
-            parameters: Parameter values to set
-            replicates: Number of replicates to run
-            
+            parameters: Dictionary of parameter values to set on the component.
+                      Same format as execute_trial().
+            replicates: Number of times to run the trial. Higher values provide
+                       better statistical significance but take longer. Typical
+                       values range from 1-10 depending on variance requirements.
+
         Returns:
-            Aggregated metrics across replicates
+            MetricResult containing aggregated metrics across all replicates:
         """
         if replicates == 1:
             return self.execute_trial(parameters)
@@ -164,19 +239,9 @@ class DatasetExecutor:
         latencies = [r.latency_ms for r in results if r.latency_ms is not None]
         
         # Calculate aggregated metrics
-        if qualities:
-            qualities.sort()
-            median_quality = qualities[len(qualities) // 2]
-        else:
-            median_quality = 0.0
-        
+        median_quality = self._calculate_median(qualities)
         total_cost = sum(costs) if costs else None
-        
-        if latencies:
-            latencies.sort()
-            median_latency = latencies[len(latencies) // 2]
-        else:
-            median_latency = None
+        median_latency = self._calculate_median(latencies) if latencies else None
         
         return MetricResult(quality=median_quality, cost=total_cost, latency_ms=median_latency)
 
@@ -219,13 +284,18 @@ class DatasetExecutor:
 
     def execute(self, parameters: Dict[str, Any]) -> List[MetricResult]:
         """
-        Execute the full dataset with given parameters.
-        
+        Execute the full dataset and return per-item results, unlike execute_trial()
+        which returns aggregated metrics. It's useful for detailed analysis, debugging,
+        r when you need to examine individual item performance rather than overall trial
+        performance.
+
         Args:
-            parameters: Parameter values to set
-            
+            parameters: Dictionary of parameter values to set on the component.
+                      Same format as execute_trial().
+
         Returns:
-            List of MetricResult for each dataset item
+            List of MetricResult objects, one for each dataset item. Each result
+            contains the quality, cost, and latency for that specific item.
         """
         # Set parameters on the component
         from ..utils.setter import set_parameters
@@ -242,7 +312,8 @@ class DatasetExecutor:
         
         return results
 
-    def _calculate_aggregate_metrics(self, results: List[MetricResult]) -> MetricResult:
+    @staticmethod
+    def _calculate_aggregate_metrics(results: List[MetricResult]) -> MetricResult:
         """
         Calculate aggregate metrics from a list of results.
         
@@ -261,19 +332,9 @@ class DatasetExecutor:
         latencies = [r.latency_ms for r in results if r.latency_ms is not None]
         
         # Calculate aggregated metrics
-        if qualities:
-            qualities.sort()
-            median_quality = qualities[len(qualities) // 2]
-        else:
-            median_quality = 0.0
-        
+        median_quality = DatasetExecutor._calculate_median(qualities)
         total_cost = sum(costs) if costs else 0.0
-        
-        if latencies:
-            latencies.sort()
-            median_latency = latencies[len(latencies) // 2]
-        else:
-            median_latency = 0.0
+        median_latency = DatasetExecutor._calculate_median(latencies)
         
         return MetricResult(quality=median_quality, cost=total_cost, latency_ms=median_latency)
 
@@ -281,19 +342,7 @@ class DatasetExecutor:
 def execute_trial(component: Any, entrypoint: EntrypointFunction, dataset: Dataset, metric: MetricFunction,
                   parameters: Dict[str, Any], max_workers: int = 1, replicates: int = 1, trial_number: int = None) -> MetricResult:
     """
-    Convenience function to execute a single trial.
-    
-    Args:
-        component: Component to tune
-        entrypoint: Function to call with (component, input)
-        dataset: Dataset of input/target pairs
-        metric: Function to compute quality score
-        parameters: Parameter values to set
-        max_workers: Maximum number of concurrent workers
-        replicates: Number of replicates to run
-        
-    Returns:
-        Aggregated metrics for the trial
+    Convenience function to execute a single trial without creating a DatasetExecutor.
     """
     executor = DatasetExecutor(component, entrypoint, dataset, metric, max_workers)
     return executor.execute_with_replicates(parameters, replicates)

@@ -2,7 +2,7 @@
   <img src="assets/octuner_logo.png" alt="Octuner Logo" width="400" style="margin-bottom: 20px;">
 </div>
 
-# Octuner - A Multi-Provider LLM Optimizer
+# Octuner - Multi-Provider LLM Optimizer
 
 **Optimize LLM providers, models, and parameters — without the guesswork.**
 

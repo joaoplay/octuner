@@ -1,8 +1,22 @@
+"""
+This file demonstrates a multistep sentiment analysis pipeline using MultiProviderTunableLLM for provider optimization.
+
+It showcases how the optimizer can automatically discover the best combination of providers, models, and parameters for
+each step in the pipeline. This is meant to be a realistic example, which requires API keys whenever you are including
+providers like OpenAI, Gemini, etc.
+
+Multiple logs are included to show the optimization process, including the search space and best parameters found.
+
+Remember that you are free to set your own configuration file, and use your own model-chain design.
+The TunableSentimentAnalyzer class is just an example of how to structure a multistep pipeline with tunable LLMs.
+"""
+
 import os
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 
 from octuner import MultiProviderTunableLLM, AutoTuner, apply_best
+
 
 @dataclass
 class SentimentResult:
@@ -32,25 +46,23 @@ class TunableSentimentAnalyzer:
     - Information gathering: Enable websearch for context about products, companies, events
     - Pure analysis: Disable websearch when external context doesn't help
     - Optimizer control: Let the optimizer automatically decide based on performance
-    
-    Websearch Parameters:
-    - use_websearch: Boolean - whether to enable web search (tunable)
-    - search_context_size: Integer (1-20) - how many search results to include (tunable)
-    - user_location: Dict - user's location for localized search (fixed, passed via provider config)
     """
 
     def __init__(self, llm_config_file: str, provider_configs: Optional[Dict[str, Dict[str, Any]]] = None,
                  user_location: Optional[Dict[str, str]] = None):
         """
-        Initialize the tunable sentiment analyzer.
+        Initialize the tunable sentiment analyzer. This is an example of a multi-model chain:
+            1. Classifier LLM: Classifies sentiment as positive, negative, or neutral
+            2. Confidence LLM: Rates confidence in the classification
+            3. Reasoning LLM: Provides detailed reasoning and final sentiment decision
         
         Args:
             llm_config_file: Path to YAML configuration file defining LLM capabilities
             provider_configs: Configuration for each provider (API keys, etc.)
                             If None, will auto-detect from environment variables
             user_location: Optional user location for websearch. Can be:
-                          - Dict: {"city": "New York", "country": "NY"} (will be wrapped in proper format)
-                          - Full format: {"approximate": {"type": "approximate", "city": "New York", "country": "NY"}}
+                          - Dict: {"city": "Coimbra", "country": "PT"} (will be wrapped in proper format)
+                          - Full format: {"approximate": {"type": "approximate", "city": "Coimbra", "country": "PT"}}
                           This is passed to OpenAI's websearch tool for localized results
         """
         self.llm_config_file = llm_config_file
@@ -65,18 +77,21 @@ class TunableSentimentAnalyzer:
 
         self.provider_configs = provider_configs
 
+        # Classifies sentiment
         self.classifier_llm = MultiProviderTunableLLM(
             config_file=llm_config_file,
             default_provider="gemini",
             provider_configs=provider_configs
         )
 
+        # Rates confidence in classification
         self.confidence_llm = MultiProviderTunableLLM(
             config_file=llm_config_file,
             default_provider="gemini",
             provider_configs=provider_configs
         )
 
+        # Provides detailed reasoning and final decision
         self.reasoning_llm = MultiProviderTunableLLM(
             config_file=llm_config_file,
             default_provider="gemini",
@@ -85,7 +100,9 @@ class TunableSentimentAnalyzer:
 
     @staticmethod
     def _auto_detect_provider_configs() -> Dict[str, Dict[str, Any]]:
-        """Auto-detect provider configurations from environment variables."""
+        """
+        Auto-detect provider configurations from environment variables.
+        """
         configs = {}
 
         # OpenAI
@@ -104,7 +121,7 @@ class TunableSentimentAnalyzer:
 
         This method is useful for demonstration purposes to see the impact of websearch.
         """
-        self.classifier_llm.use_websearch =True
+        self.classifier_llm.use_websearch = True
         self.confidence_llm.use_websearch = False
         self.reasoning_llm.use_websearch = False
 
@@ -122,13 +139,9 @@ class TunableSentimentAnalyzer:
         """
         Analyze sentiment using a multistep approach with optimizable providers.
         
-        The websearch usage is now tunable - the optimizer can decide whether
-        to enable websearch for each step based on performance improvements.
-        
-        All prompts are designed to work effectively both with and without websearch:
-        - When websearch is disabled: LLM analyzes the provided text directly
-        - When websearch is enabled: LLM can leverage additional context about mentioned entities
-        
+        This method is called at each step of the optimization process. Note that it is used in the entrypoint
+        parameter of AutoTuner.from_component().
+
         Args:
             text: Input text to analyze
             
@@ -270,7 +283,6 @@ class TunableSentimentAnalyzer:
             final_sentiment=final_sentiment,
             final_confidence=final_confidence
         )
-
 
     def get_provider_summary(self) -> Dict[str, str]:
         """Get current provider configuration for each step."""
@@ -670,7 +682,5 @@ Available config templates:
     parser.add_argument("config_file", help="Path to YAML configuration file")
 
     args = parser.parse_args()
-
-    print(f"Using configuration file: {args.config_file}")
 
     main(args.config_file)
