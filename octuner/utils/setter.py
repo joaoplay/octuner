@@ -1,12 +1,5 @@
-"""
-Parameter setting for Octuner.
-
-Safely sets parameter values on discovered components,
-handling proxy attributes and type validation.
-"""
-
 import logging
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional
 from ..tunable.mixin import get_proxy_attribute, is_llm_tunable, get_tunable_parameters
 from ..tunable.types import ParamType
 
@@ -191,26 +184,22 @@ class ParameterSetter:
         # Cache the result
         self._cache[path] = current
         return current
-    
-    def _validate_and_coerce_value(
-        self, 
-        value: Any, 
-        param_type: ParamType, 
-        low: Any, 
-        high: Any
-    ) -> Any:
+
+    @staticmethod
+    def _validate_and_coerce_value(value: Any, param_type: ParamType, low: Any,
+                                   high: Any) -> Any:
         """
         Validate and coerce a parameter value.
-        
+
         Args:
             value: Value to validate/coerce
             param_type: Expected parameter type
             low: Lower bound or choices
             high: Upper bound
-            
+
         Returns:
             Coerced value
-            
+
         Raises:
             ValueError: If value is invalid for the parameter type
         """
@@ -224,7 +213,7 @@ class ParameterSetter:
                 return coerced
             except (ValueError, TypeError):
                 raise ValueError(f"Cannot convert {value} to float")
-        
+
         elif param_type == "int":
             if value is None:
                 return None
@@ -237,12 +226,12 @@ class ParameterSetter:
                 return coerced
             except (ValueError, TypeError):
                 raise ValueError(f"Cannot convert {value} to int")
-        
+
         elif param_type == "choice":
             if value not in low:  # low contains choices for choice type
                 raise ValueError(f"Value {value} not in choices {low}")
             return value
-        
+
         elif param_type == "bool":
             if isinstance(value, bool):
                 return value
@@ -257,7 +246,7 @@ class ParameterSetter:
                 return bool(value)
             else:
                 raise ValueError(f"Cannot convert {type(value).__name__} to bool")
-        
+
         elif param_type == "list":
             if isinstance(value, list):
                 return value
@@ -271,8 +260,8 @@ class ParameterSetter:
                     return [item.strip() for item in value.split(',') if item.strip()]
             else:
                 return list(value) if value else []
-        
-        
+
+
         else:
             raise ValueError(f"Unknown parameter type: {param_type}")
 

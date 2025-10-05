@@ -1,8 +1,9 @@
-import time
-import threading
 import logging
+import threading
+import time
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
+
 from ..tunable.mixin import is_llm_tunable, get_call_method_name
 
 logger = logging.getLogger(__name__)

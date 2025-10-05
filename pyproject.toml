@@ -6,18 +6,35 @@ authors = [
     {name = "Your Name", email = "your.email@example.com"}
 ]
 readme = "README.md"
+license = {text = "MIT"}
+keywords = ["llm", "large-language-models", "hyperparameter-optimization", "parameter-tuning", "model-selection", "optuna", "openai", "gemini", "prompt-engineering", "multi-provider", "auto-tuning"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 requires-python = ">=3.10"
 dependencies = [
     "google-genai>=0.8.5",
-    "mkdocs-material>=9.6.20",
-    "mkdocs-minify-plugin>=0.8.0",
-    "mkdocstrings[python]>=0.24.0",
-    "mkdocstrings-python>=1.7.0",
     "openai>=1.101.0",
     "optuna>=3.0.0",
     "pyyaml>=6.0",
     "typing-extensions>=4.0.0; python_version < '3.12'",
 ]
+
+[project.urls]
+Homepage = "https://github.com/joaoplay/octuner"
+Repository = "https://github.com/joaoplay/octuner"
+Documentation = "https://joaoplay.github.io/octuner"
+"Bug Tracker" = "https://github.com/joaoplay/octuner/issues"
 
 [project.optional-dependencies]
 dev = [
@@ -31,6 +48,12 @@ dev = [
 ]
 examples = [
     "openai>=1.0.0"
+]
+docs = [
+    "mkdocs-material>=9.6.20",
+    "mkdocs-minify-plugin>=0.8.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocstrings-python>=1.7.0",
 ]
 
 [build-system]
@@ -49,12 +72,12 @@ include = [
 ]
 
 [tool.black]
-line-length = 88
+line-length = 120
 target-version = ['py310']
 
 [tool.isort]
 profile = "black"
-line_length = 88
+line_length = 120
 
 [tool.mypy]
 python_version = "3.10"
@@ -64,7 +87,7 @@ disallow_untyped_defs = true
 
 [tool.ruff]
 target-version = "py310"
-line-length = 88
+line-length = 120
 select = ["E", "F", "I", "N", "W", "B", "C4", "UP"]
 ignore = ["E501", "B008"]
 

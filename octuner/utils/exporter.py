@@ -1,10 +1,3 @@
-"""
-Export/import functionality for Octuner.
-
-Saves best parameters to YAML and provides apply_best function
-for replaying optimal settings in production.
-"""
-
 import hashlib
 import logging
 import time
@@ -15,11 +8,8 @@ from .setter import set_parameters
 logger = logging.getLogger(__name__)
 
 
-def save_parameters_to_yaml(
-    parameters: Dict[str, Any], 
-    path: str, 
-    metadata: Optional[Dict[str, Any]] = None
-) -> None:
+def save_parameters_to_yaml(parameters: Dict[str, Any],  path: str,
+                            metadata: Optional[Dict[str, Any]] = None) -> None:
     """
     Save parameters to a YAML file.
     
@@ -173,14 +163,9 @@ def compute_dataset_fingerprint(dataset: Any) -> str:
     return f"sha256:{hash_obj.hexdigest()[:16]}"
 
 
-def create_metadata_summary(
-    trials: list,
-    optimization_mode: str = "pareto",
-    dataset_size: int = 0,
-    total_trials: int = 0,
-    best_quality: float = 0.0,
-    best_cost: Optional[float] = None,
-    best_latency_ms: Optional[float] = None,
+def create_metadata_summary(trials: list, optimization_mode: str = "pareto",
+    dataset_size: int = 0, total_trials: int = 0, best_quality: float = 0.0,
+    best_cost: Optional[float] = None, best_latency_ms: Optional[float] = None,
     dataset_fingerprint: Optional[str] = None
 ) -> Dict[str, Any]:
     """

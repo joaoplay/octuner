@@ -26,11 +26,6 @@ def register_provider(name: str, provider_class: Type[BaseLLMProvider]) -> None:
         
     Raises:
         ValueError: If provider_class doesn't inherit from BaseLLMProvider
-        
-    Example:
-        >>> from octuner.providers import register_provider
-        >>> from my_provider import OllamaProvider
-        >>> register_provider('ollama', OllamaProvider)
     """
     if not issubclass(provider_class, BaseLLMProvider):
         raise ValueError(
@@ -68,11 +63,6 @@ def list_providers() -> List[str]:
     
     Returns:
         List of provider names
-        
-    Example:
-        >>> from octuner.providers import list_providers
-        >>> print(list_providers())
-        ['openai', 'gemini', 'ollama']
     """
     return list(PROVIDERS.keys())
 
