@@ -1,9 +1,9 @@
 [project]
 name = "octuner"
-version = "0.1.0"
-description = "A lightweight library that optimizes parameters of multi-call LLM components via auto-discovery and tuning"
+version = "0.1.1"
+description = "A lightweight Python library that automatically discovers, evaluates, and tunes parameters of multi-provider LLM pipelines to balance quality, cost, and latency."
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "João Braz Simões", email = "joaosbraz@gmail.com"}
 ]
 readme = "README.md"
 license = {text = "MIT"}

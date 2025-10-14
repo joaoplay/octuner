@@ -4,6 +4,9 @@
 
 # Octuner - Multi-Provider LLM Optimizer
 
+[![PyPI](https://img.shields.io/pypi/v/octuner.svg)](https://pypi.org/project/octuner/)
+[![Documentation](https://img.shields.io/badge/docs-online-brightgreen)](https://joaoplay.github.io/octuner/)
+
 **Optimize LLM providers, models, and parameters — without the guesswork.**
 
 Octuner is a lightweight library that solves the decision-making process when integrating with LLMs, especially in multi-step model chaining scenarios.
