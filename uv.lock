@@ -1044,7 +1044,7 @@ wheels = [
 
 [[package]]
 name = "octuner"
-version = "0.1.0"
+version = "0.1.2.post1"
 source = { editable = "." }
 dependencies = [
     { name = "google-genai" },
