@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/assets/octuner_logo.png" alt="Octuner Logo" width="400">
+  <img src="https://github.com/joaoplay/octuner/raw/main/docs/assets/octuner_logo.png" alt="Octuner Logo" width="400">
 </div>
 
 # Octuner - Multi-Provider LLM Optimizer
