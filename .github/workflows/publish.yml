@@ -24,7 +24,7 @@ jobs:
 
       - name: Install build backend
         run: pip install uv build
-p
+
       - name: Build the package
         run: uv build
 
