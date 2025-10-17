@@ -28,14 +28,17 @@ jobs:
       - name: Build the package
         run: uv build
 
-      # Test PyPI
       - name: Publish to TestPyPI
         id: testpypi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
 
-      # PyPI
+      - name: Rebuild package before PyPI publish
+        run: |
+          rm -rf dist/
+          uv build
+
       - name: Publish to PyPI
         if: steps.testpypi.outcome == 'success'
         uses: pypa/gh-action-pypi-publish@release/v1
